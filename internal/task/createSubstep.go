@@ -2,6 +2,7 @@ package task
 
 import (
 	"context"
+	"errors"
 
 	"github.com/radimzitka/zitodo-mongo/internal/data"
 	"github.com/radimzitka/zitodo-mongo/internal/db"
@@ -25,7 +26,7 @@ func CreateSubstep(substep *data.SubStep, id *primitive.ObjectID) (*data.Item, e
 		},
 	}, opts).Decode(&task)
 	if err != nil {
-		return nil, err
+		return nil, errors.New("error when finding subtask")
 	}
 
 	return &task, nil

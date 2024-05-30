@@ -10,6 +10,7 @@ import (
 )
 
 func DeleteSubstep(tid *primitive.ObjectID, sid *primitive.ObjectID) error {
+	// Overovat, jestli ID v DTB existuje nebo jak to dělat? Já takhle nepoznám chybu...
 	delete, err := db.Coll.Tasks.UpdateOne(context.Background(), bson.M{
 		"_id": tid,
 	}, bson.M{
@@ -20,11 +21,11 @@ func DeleteSubstep(tid *primitive.ObjectID, sid *primitive.ObjectID) error {
 		},
 	})
 	if err != nil {
-		return err
+		return errors.New("error occured while deleting subtask")
 	}
 
 	if delete.MatchedCount == 0 {
-		return errors.New("trying to delete non-exist substep")
+		return errors.New("subtask not found")
 	}
 
 	return nil

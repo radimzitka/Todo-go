@@ -21,7 +21,7 @@ func FinishByID(id *primitive.ObjectID) error {
 	}
 
 	if task.Finished {
-		return errors.New("task was already finished")
+		return errors.New("task is already finished")
 	}
 
 	_, err = db.Coll.Tasks.UpdateOne(context.Background(), bson.M{
@@ -32,6 +32,9 @@ func FinishByID(id *primitive.ObjectID) error {
 			"timeFinished": time.Now(),
 		},
 	})
+	if err != nil {
+		return errors.New("error occured while deleting subtask")
+	}
 
-	return err
+	return nil
 }

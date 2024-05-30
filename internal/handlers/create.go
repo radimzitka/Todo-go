@@ -7,6 +7,7 @@ import (
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/radimzitka/zitodo-mongo/internal/data"
+	"github.com/radimzitka/zitodo-mongo/internal/response"
 	"github.com/radimzitka/zitodo-mongo/internal/task"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -22,7 +23,7 @@ type payloadCreateSubStep struct {
 	Done         bool      `json:"done"`
 }
 
-func (p *payloadCreateTask) Validate() error {
+func (p *payloadCreateTask) ValidateTitle(c fiber.Ctx) error {
 	if strings.TrimSpace(p.Title) == "" {
 		return errors.New("non-valid title")
 	}
@@ -33,11 +34,21 @@ func CreateHandler(c fiber.Ctx) error {
 	var payload payloadCreateTask
 	err := c.Bind().Body(&payload)
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).SendString("Invalid request")
+		// Je toto spravne odeslani chyby?
+		return response.SendError(c, 400, response.APIError{
+			Type:        "DataCheckError",
+			Msg:         "Error occured when data was readed from Body.",
+			ErrorNumber: 400,
+		})
 	}
 
-	if err = payload.Validate(); err != nil {
-		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
+	// Proc toto nefunguje?
+	if err = payload.ValidateTitle(c); err != nil {
+		return response.SendError(c, 400, response.APIError{
+			Type:        "TitleNotValid",
+			Msg:         "Title has not valid format.",
+			ErrorNumber: 400,
+		})
 	}
 
 	substeps := make([]*data.SubStep, len(payload.SubSteps))
@@ -60,8 +71,15 @@ func CreateHandler(c fiber.Ctx) error {
 		TimeFinished: nil,
 	})
 
+	// Je toto ok?
 	if err != nil {
-		return err
+		if err.Error() == "error when inserting task" {
+			return response.SendError(c, 500, response.APIError{
+				Type:        "TaskCreateError",
+				Msg:         "Error during creating new task",
+				ErrorNumber: 500,
+			})
+		}
 	}
 
 	return c.JSON(insertedTask)

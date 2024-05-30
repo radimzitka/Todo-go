@@ -18,7 +18,7 @@ func DeleteByID(id *primitive.ObjectID) error {
 	}
 
 	if result.DeletedCount == 0 {
-		return errors.New("try to delete non-exist task")
+		return errors.New("task does not exist")
 	}
 	return nil
 }

@@ -2,6 +2,7 @@ package task
 
 import (
 	"context"
+	"errors"
 
 	"github.com/radimzitka/zitodo-mongo/internal/data"
 	"github.com/radimzitka/zitodo-mongo/internal/db"
@@ -11,7 +12,7 @@ import (
 func List() ([]*data.Item, error) {
 	cursor, err := db.Coll.Tasks.Find(context.Background(), bson.M{})
 	if err != nil {
-		return nil, err
+		return nil, errors.New("error during access to dtb")
 	}
 
 	tasks := make([]*data.Item, 0)

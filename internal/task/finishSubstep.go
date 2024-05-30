@@ -31,14 +31,14 @@ func FinishSubstep(tid *primitive.ObjectID, sid *primitive.ObjectID) (*data.SubS
 		"_id": tid,
 	}).Decode(&task)
 	if err != nil {
-		return nil, err
+		return nil, errors.New("error occured while deleting subtask")
 	}
 
 	// Is substep already done?
 	for _, substep := range task.SubSteps {
 		if *substep.ID == *sid {
 			if substep.Done {
-				return nil, errors.New("substep is already done")
+				return nil, errors.New("subtask already finished")
 			}
 		}
 	}
@@ -53,7 +53,7 @@ func FinishSubstep(tid *primitive.ObjectID, sid *primitive.ObjectID) (*data.SubS
 		},
 	}, opts).Decode(&task)
 	if err != nil {
-		return nil, err
+		return nil, errors.New("error occured during finding subtask")
 	}
 
 	for _, substep := range task.SubSteps {

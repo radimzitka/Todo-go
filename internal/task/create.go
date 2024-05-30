@@ -2,6 +2,7 @@ package task
 
 import (
 	"context"
+	"errors"
 
 	"github.com/radimzitka/zitodo-mongo/internal/data"
 	"github.com/radimzitka/zitodo-mongo/internal/db"
@@ -11,7 +12,7 @@ import (
 func Create(item *data.Item) (*data.Item, error) {
 	inserted, err := db.Coll.Tasks.InsertOne(context.Background(), item)
 	if err != nil {
-		return nil, err
+		return nil, errors.New("error when inserting task")
 	}
 	iid := inserted.InsertedID.(primitive.ObjectID)
 	item.ID = &iid
