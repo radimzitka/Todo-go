@@ -9,7 +9,7 @@ import (
 )
 
 func List() ([]*data.Item, error) {
-	cursor, err := db.Client.Collection("tasks").Find(context.Background(), bson.M{}) // bson.M je filtr (např. filtrovat ty tituly, které)
+	cursor, err := db.Coll.Tasks.Find(context.Background(), bson.M{})
 	if err != nil {
 		return nil, err
 	}

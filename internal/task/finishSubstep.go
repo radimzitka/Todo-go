@@ -12,16 +12,24 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+// Ukol do priste, commitnout
+/* func isSubstepDone(){
+	for _, substep := range task.SubSteps {
+		if *substep.ID == *sid {
+			return substep, nil
+		}
+	}
+
+} */
+
 func FinishSubstep(tid *primitive.ObjectID, sid *primitive.ObjectID) (*data.SubStep, error) {
 	var task data.Item
 	opts := options.FindOneAndUpdate()
 	opts.SetReturnDocument(options.After)
 
-	err := db.Client.Collection("tasks").FindOne(context.Background(), bson.M{
-		"_id":          tid,
-		"substeps._id": sid,
+	err := db.Coll.Tasks.FindOne(context.Background(), bson.M{
+		"_id": tid,
 	}).Decode(&task)
-
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +43,7 @@ func FinishSubstep(tid *primitive.ObjectID, sid *primitive.ObjectID) (*data.SubS
 		}
 	}
 
-	err = db.Client.Collection("tasks").FindOneAndUpdate(context.Background(), bson.M{
+	err = db.Coll.Tasks.FindOneAndUpdate(context.Background(), bson.M{
 		"_id":          tid,
 		"substeps._id": sid,
 	}, bson.M{
@@ -44,7 +52,6 @@ func FinishSubstep(tid *primitive.ObjectID, sid *primitive.ObjectID) (*data.SubS
 			"substeps.$.finishedTime": time.Now(),
 		},
 	}, opts).Decode(&task)
-
 	if err != nil {
 		return nil, err
 	}

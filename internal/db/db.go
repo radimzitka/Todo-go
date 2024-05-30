@@ -8,7 +8,17 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+type Collections struct {
+	Tasks *mongo.Collection
+}
+
+var Coll = Collections{}
+
 var Client *mongo.Database
+
+func initCollections() {
+	Coll.Tasks = Client.Collection("tasks")
+}
 
 func Connect(connectionString string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -19,6 +29,6 @@ func Connect(connectionString string) error {
 	}
 
 	Client = client.Database("development")
-
+	initCollections()
 	return nil
 }

@@ -9,8 +9,7 @@ import (
 )
 
 func Create(item *data.Item) (*data.Item, error) {
-	// Add thesis to the database
-	inserted, err := db.Client.Collection("tasks").InsertOne(context.Background(), item)
+	inserted, err := db.Coll.Tasks.InsertOne(context.Background(), item)
 	if err != nil {
 		return nil, err
 	}

@@ -18,7 +18,6 @@ func FinishSubstepHandler(c fiber.Ctx) error {
 	}
 
 	task, err := task.FinishSubstep(&tid, &sid)
-
 	if err != nil {
 		return err
 	}

@@ -13,7 +13,7 @@ import (
 
 func FinishByID(id *primitive.ObjectID) error {
 	var task data.Item
-	err := db.Client.Collection("tasks").FindOne(context.Background(), bson.M{
+	err := db.Coll.Tasks.FindOne(context.Background(), bson.M{
 		"_id": id,
 	}).Decode(&task)
 	if err != nil {
@@ -24,7 +24,7 @@ func FinishByID(id *primitive.ObjectID) error {
 		return errors.New("task was already finished")
 	}
 
-	_, err = db.Client.Collection("tasks").UpdateOne(context.Background(), bson.M{
+	_, err = db.Coll.Tasks.UpdateOne(context.Background(), bson.M{
 		"_id": id,
 	}, bson.M{
 		"$set": bson.M{

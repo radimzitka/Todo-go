@@ -11,6 +11,7 @@ func FinishHandler(c fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).SendString("Invalid ID")
 	}
+	
 	err = task.FinishByID(&id)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).SendString(err.Error())

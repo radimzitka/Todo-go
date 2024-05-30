@@ -10,7 +10,7 @@ import (
 )
 
 func DeleteByID(id *primitive.ObjectID) error {
-	result, err := db.Client.Collection("tasks").DeleteOne(context.Background(), bson.M{
+	result, err := db.Coll.Tasks.DeleteOne(context.Background(), bson.M{
 		"_id": id,
 	})
 	if err != nil {

@@ -20,17 +20,15 @@ func (p *payloadCreateSubStep) Validate() error {
 func CreateSubstepHandler(c fiber.Ctx) error {
 	idStr := c.Params("id")
 	id, err := primitive.ObjectIDFromHex(idStr)
-
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).SendString("Invalid ID")
 	}
+
 	var payload payloadCreateSubStep
 	err = c.Bind().Body(&payload)
-
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).SendString("Invalid request")
 	}
-
 	if err = payload.Validate(); err != nil {
 		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
 	}
@@ -38,7 +36,6 @@ func CreateSubstepHandler(c fiber.Ctx) error {
 	updatedTask, err := task.CreateSubstep(&data.SubStep{
 		Title: payload.Title,
 	}, &id)
-
 	if err != nil {
 		return err
 	}

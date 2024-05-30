@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"errors"
+	"strings"
 	"time"
 
 	"github.com/gofiber/fiber/v3"
@@ -10,22 +11,21 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+type payloadCreateTask struct {
+	Title    string                 `json:"title"`
+	SubSteps []payloadCreateSubStep `json:"substeps"`
+}
+
 type payloadCreateSubStep struct {
 	Title        string    `json:"title"`
 	FinishedTime time.Time `json:"finishedTime"`
 	Done         bool      `json:"done"`
 }
 
-type payloadCreateTask struct {
-	Title    string                 `json:"title"`
-	SubSteps []payloadCreateSubStep `json:"substeps"`
-}
-
 func (p *payloadCreateTask) Validate() error {
-	if p.Title == "" {
-		return errors.New("title is required")
+	if strings.TrimSpace(p.Title) == "" {
+		return errors.New("non-valid title")
 	}
-
 	return nil
 }
 
