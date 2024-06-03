@@ -8,6 +8,7 @@ import (
 	"github.com/radimzitka/zitodo-mongo/internal/db"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
@@ -25,8 +26,12 @@ func CreateSubstep(substep *data.SubStep, id *primitive.ObjectID) (*data.Item, e
 			"substeps": substep,
 		},
 	}, opts).Decode(&task)
+
+	if err == mongo.ErrNoDocuments {
+		return nil, errors.New(data.TASK_NOT_FOUND)
+	}
 	if err != nil {
-		return nil, errors.New("error when finding subtask")
+		return nil, errors.New(data.ANY_ERROR_INSERTING_SUBTASK)
 	}
 
 	return &task, nil

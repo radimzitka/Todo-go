@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/gofiber/fiber/v3"
+	"github.com/radimzitka/zitodo-mongo/internal/data"
 	"github.com/radimzitka/zitodo-mongo/internal/response"
 	"github.com/radimzitka/zitodo-mongo/internal/task"
 )
@@ -9,10 +10,17 @@ import (
 func ListHandler(c fiber.Ctx) error {
 	list, err := task.List()
 
-	if err.Error() == "error during access to dtb" {
+	if err != nil {
+		if err.Error() == data.ANY_ERROR_READING_DTB {
+			return response.SendError(c, 500, response.APIError{
+				Type:        "DatabaseAccessFailed",
+				Msg:         "Access to MDB failed",
+				ErrorNumber: 500,
+			})
+		}
 		return response.SendError(c, 500, response.APIError{
-			Type:        "DatabaseAccessFailed",
-			Msg:         "Access to MDB failed",
+			Type:        "InternalServerError",
+			Msg:         "",
 			ErrorNumber: 500,
 		})
 	}

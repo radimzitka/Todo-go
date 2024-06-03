@@ -9,18 +9,11 @@ import (
 	"github.com/radimzitka/zitodo-mongo/internal/db"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// Ukol do priste, commitnout
-/* func isSubstepDone(){
-	for _, substep := range task.SubSteps {
-		if *substep.ID == *sid {
-			return substep, nil
-		}
-	}
-
-} */
+const SUBTASK_FINISHED = "task already finished"
 
 func FinishSubstep(tid *primitive.ObjectID, sid *primitive.ObjectID) (*data.SubStep, error) {
 	var task data.Item
@@ -30,15 +23,18 @@ func FinishSubstep(tid *primitive.ObjectID, sid *primitive.ObjectID) (*data.SubS
 	err := db.Coll.Tasks.FindOne(context.Background(), bson.M{
 		"_id": tid,
 	}).Decode(&task)
+	if err == mongo.ErrNoDocuments {
+		return nil, errors.New(data.TASK_NOT_FOUND)
+	}
 	if err != nil {
-		return nil, errors.New("error occured while deleting subtask")
+		return nil, errors.New(data.ANY_ERROR_DELETING_TASK)
 	}
 
 	// Is substep already done?
 	for _, substep := range task.SubSteps {
 		if *substep.ID == *sid {
 			if substep.Done {
-				return nil, errors.New("subtask already finished")
+				return nil, errors.New(data.SUBTASK_FINISHED)
 			}
 		}
 	}
@@ -52,8 +48,11 @@ func FinishSubstep(tid *primitive.ObjectID, sid *primitive.ObjectID) (*data.SubS
 			"substeps.$.finishedTime": time.Now(),
 		},
 	}, opts).Decode(&task)
+	if err == mongo.ErrNoDocuments {
+		return nil, errors.New(data.SUBTASK_NOT_FOUND)
+	}
 	if err != nil {
-		return nil, errors.New("error occured during finding subtask")
+		return nil, errors.New(data.ANY_ERROR_DELETING_SUBTASK)
 	}
 
 	for _, substep := range task.SubSteps {

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/radimzitka/zitodo-mongo/internal/data"
 	"github.com/radimzitka/zitodo-mongo/internal/db"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -18,7 +19,7 @@ func DeleteByID(id *primitive.ObjectID) error {
 	}
 
 	if result.DeletedCount == 0 {
-		return errors.New("task does not exist")
+		return errors.New(data.TASK_NOT_FOUND)
 	}
 	return nil
 }

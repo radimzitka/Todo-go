@@ -46,7 +46,7 @@ func CreateHandler(c fiber.Ctx) error {
 	if err = payload.ValidateTitle(c); err != nil {
 		return response.SendError(c, 400, response.APIError{
 			Type:        "TitleNotValid",
-			Msg:         "Title has not valid format.",
+			Msg:         "Title for task has not valid format.",
 			ErrorNumber: 400,
 		})
 	}
@@ -73,13 +73,18 @@ func CreateHandler(c fiber.Ctx) error {
 
 	// Je toto ok?
 	if err != nil {
-		if err.Error() == "error when inserting task" {
+		if err.Error() == data.ANY_ERROR_INSERTING_TASK {
 			return response.SendError(c, 500, response.APIError{
 				Type:        "TaskCreateError",
 				Msg:         "Error during creating new task",
 				ErrorNumber: 500,
 			})
 		}
+		return response.SendError(c, 500, response.APIError{
+			Type:        "InternalServerError",
+			Msg:         "",
+			ErrorNumber: 500,
+		})
 	}
 
 	return c.JSON(insertedTask)

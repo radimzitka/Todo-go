@@ -9,6 +9,7 @@ import (
 	"github.com/radimzitka/zitodo-mongo/internal/db"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func FinishByID(id *primitive.ObjectID) error {
@@ -16,12 +17,15 @@ func FinishByID(id *primitive.ObjectID) error {
 	err := db.Coll.Tasks.FindOne(context.Background(), bson.M{
 		"_id": id,
 	}).Decode(&task)
+	if err == mongo.ErrNoDocuments {
+		return errors.New(data.TASK_NOT_FOUND)
+	}
 	if err != nil {
 		return err
 	}
 
 	if task.Finished {
-		return errors.New("task is already finished")
+		return errors.New(data.TASK_FINISHED)
 	}
 
 	_, err = db.Coll.Tasks.UpdateOne(context.Background(), bson.M{
@@ -33,7 +37,7 @@ func FinishByID(id *primitive.ObjectID) error {
 		},
 	})
 	if err != nil {
-		return errors.New("error occured while deleting subtask")
+		return errors.New(data.ANY_ERROR_DELETING_TASK)
 	}
 
 	return nil

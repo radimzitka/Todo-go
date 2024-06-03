@@ -12,7 +12,7 @@ import (
 func List() ([]*data.Item, error) {
 	cursor, err := db.Coll.Tasks.Find(context.Background(), bson.M{})
 	if err != nil {
-		return nil, errors.New("error during access to dtb")
+		return nil, errors.New(data.ANY_ERROR_READING_DTB)
 	}
 
 	tasks := make([]*data.Item, 0)
