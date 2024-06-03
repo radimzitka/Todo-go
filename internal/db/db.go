@@ -10,6 +10,7 @@ import (
 
 type Collections struct {
 	Tasks *mongo.Collection
+	Users *mongo.Collection
 }
 
 var Coll = Collections{}
@@ -18,6 +19,7 @@ var Client *mongo.Database
 
 func initCollections() {
 	Coll.Tasks = Client.Collection("tasks")
+	Coll.Users = Client.Collection("users")
 }
 
 func Connect(connectionString string) error {

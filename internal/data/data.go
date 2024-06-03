@@ -16,6 +16,8 @@ const (
 	SUBTASK_NOT_FOUND           = "subtask was not found"
 	SUBTASK_FINISHED            = "subtask already finished"
 	TASK_FINISHED               = "task already finished"
+	ANY_ERROR_INSERTING_USER    = "error while inserting new user"
+	USER_NOT_FOUND              = "user not found"
 )
 
 type SubStep struct {
@@ -34,4 +36,10 @@ type Item struct {
 	SubSteps     []*SubStep          `json:"substeps" bson:"substeps"`
 	Finished     bool                `json:"finished" bson:"finished"`
 	TimeFinished *time.Time          `json:"timeFinished" bson:"timeFinished"`
+}
+
+type User struct {
+	ID       *primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+	Username string              `json:"username" bson:"username"`
+	Items    []*Item             `json:"items" bson:"items"`
 }
