@@ -11,7 +11,7 @@ func ListHandler(c fiber.Ctx) error {
 	list, err := task.List()
 
 	if err != nil {
-		if err.Error() == data.ANY_ERROR_READING_DTB {
+		if err.Error() == data.AnyErrorReadingDB {
 			return response.SendError(c, 500, response.APIError{
 				Type:        "DatabaseAccessFailed",
 				Msg:         "Access to MDB failed",

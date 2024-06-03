@@ -21,7 +21,7 @@ func DeleteSubstep(tid *primitive.ObjectID, sid *primitive.ObjectID) error {
 		return errors.New(data.TASK_NOT_FOUND)
 	}
 	if err != nil {
-		return errors.New(data.ANY_ERROR_READING_DTB)
+		return errors.New(data.AnyErrorReadingDB)
 	}
 
 	validSubtaskID := false

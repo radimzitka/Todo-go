@@ -6,6 +6,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 	handlersTask "github.com/radimzitka/zitodo-mongo/internal/handlers/tasks"
 	handlersUser "github.com/radimzitka/zitodo-mongo/internal/handlers/users"
+	"github.com/radimzitka/zitodo-mongo/internal/response"
 )
 
 func Init() {
@@ -22,9 +23,17 @@ func Init() {
 	app.Put("/tasks/:id/substeps/:sid/finish", handlersTask.FinishSubstepHandler)
 	app.Delete("/tasks/:id/substeps/:sid", handlersTask.DeleteSubstepHandler)
 
-	app.Post("/users", handlersUser.AddHandler)
-	app.Delete("/users/:id", handlersUser.DeleteHandler)
-	app.Get("/users", handlersUser.ListHandler)
+	app.Post("/auth/register", handlersUser.AddHandler)
+	app.Delete("/auth/register/:id", handlersUser.DeleteHandler)
+	app.Get("/auth/register", handlersUser.ListHandler)
 
+	app.All("*", func(c fiber.Ctx) error {
+		return response.SendError(c, 404, response.APIError{
+			Type:        "Not found",
+			Msg:         "Requested page not found.",
+			ErrorNumber: 404,
+		})
+	})
 	log.Fatalln(app.Listen(":3000"))
+
 }

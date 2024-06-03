@@ -7,7 +7,8 @@ import (
 )
 
 const (
-	ANY_ERROR_READING_DTB       = "error reading from database"
+	// opravit
+	AnyErrorReadingDB           = "error reading from database"
 	ANY_ERROR_INSERTING_TASK    = "error while inserting new task"
 	ANY_ERROR_INSERTING_SUBTASK = "error while inserting new task"
 	ANY_ERROR_DELETING_TASK     = "error while searching for the task"
@@ -42,6 +43,5 @@ type User struct {
 	ID       *primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	Name     string              `json:"name" bson:"name"`
 	Email    string              `json:"email" bson:"email"`
-	Password string              `json:"password" bson:"password"`
-	Items    []*Item             `json:"items" bson:"items"`
+	Password string              `json:"-" bson:"password"`
 }

@@ -2,9 +2,9 @@ package users
 
 import (
 	"errors"
-	"regexp"
 	"strings"
 
+	emailverifier "github.com/AfterShip/email-verifier"
 	"github.com/gofiber/fiber/v3"
 	"github.com/radimzitka/zitodo-mongo/internal/data"
 	"github.com/radimzitka/zitodo-mongo/internal/response"
@@ -26,10 +26,13 @@ func (p *payloadCreateUser) ValidateName(c fiber.Ctx) error {
 }
 
 func (p *payloadCreateUser) ValidateEmail(c fiber.Ctx) error {
-	var emailRegex = regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
-
-	if !emailRegex.MatchString(p.Email) {
-		return errors.New("non-valid email")
+	verifier := emailverifier.NewVerifier()
+	ret, err := verifier.Verify(p.Email)
+	if err != nil {
+		return errors.New("verify email address failed")
+	}
+	if !ret.Syntax.Valid {
+		return errors.New("email address has no valid format")
 	}
 	return nil
 }
@@ -77,7 +80,7 @@ func AddHandler(c fiber.Ctx) error {
 		})
 	}
 
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(payload.Password), bcrypt.DefaultCost)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(payload.Password), 15)
 	if err != nil {
 		return response.SendError(c, 500, response.APIError{
 			Type:        "HasPasswordError",

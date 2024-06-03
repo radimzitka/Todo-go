@@ -12,7 +12,7 @@ import (
 func List() ([]*data.User, error) {
 	cursor, err := db.Coll.Users.Find(context.Background(), bson.M{})
 	if err != nil {
-		return nil, errors.New(data.ANY_ERROR_READING_DTB)
+		return nil, errors.New(data.AnyErrorReadingDB)
 	}
 
 	users := make([]*data.User, 0)
