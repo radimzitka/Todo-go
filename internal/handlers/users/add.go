@@ -2,21 +2,42 @@ package users
 
 import (
 	"errors"
+	"regexp"
 	"strings"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/radimzitka/zitodo-mongo/internal/data"
 	"github.com/radimzitka/zitodo-mongo/internal/response"
 	"github.com/radimzitka/zitodo-mongo/internal/user"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type payloadCreateUser struct {
-	Username string `json:"title"`
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
-func (p *payloadCreateUser) ValidateTitle(c fiber.Ctx) error {
-	if strings.TrimSpace(p.Username) == "" {
+func (p *payloadCreateUser) ValidateName(c fiber.Ctx) error {
+	if len(strings.TrimSpace(p.Name)) < 3 {
 		return errors.New("non-valid username")
+	}
+	return nil
+}
+
+func (p *payloadCreateUser) ValidateEmail(c fiber.Ctx) error {
+	var emailRegex = regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
+
+	if !emailRegex.MatchString(p.Email) {
+		return errors.New("non-valid email")
+	}
+	return nil
+}
+
+func (p *payloadCreateUser) ValidatePassword(c fiber.Ctx) error {
+	// overit email
+	if len(p.Password) < 10 {
+		return errors.New("non-valid password")
 	}
 	return nil
 }
@@ -25,7 +46,6 @@ func AddHandler(c fiber.Ctx) error {
 	var payload payloadCreateUser
 	err := c.Bind().Body(&payload)
 	if err != nil {
-		// Je toto spravne odeslani chyby?
 		return response.SendError(c, 400, response.APIError{
 			Type:        "DataCheckError",
 			Msg:         "Error occured when data was readed from Body.",
@@ -33,18 +53,43 @@ func AddHandler(c fiber.Ctx) error {
 		})
 	}
 
-	// Proc toto nefunguje?
-	if err = payload.ValidateTitle(c); err != nil {
+	if err = payload.ValidateName(c); err != nil {
 		return response.SendError(c, 400, response.APIError{
-			Type:        "UsernameNotValid",
-			Msg:         "Username for task has not valid format.",
+			Type:        "NameNotValid",
+			Msg:         "Name for task has not valid format (length < 3 ch)",
 			ErrorNumber: 400,
 		})
 	}
 
-	//substeps := make([]*data.SubStep, len(payload.SubSteps))
+	if err = payload.ValidateEmail(c); err != nil {
+		return response.SendError(c, 400, response.APIError{
+			Type:        "EmailNotValid",
+			Msg:         "Email has not correct format ('user@email.com')",
+			ErrorNumber: 400,
+		})
+	}
+
+	if err = payload.ValidatePassword(c); err != nil {
+		return response.SendError(c, 400, response.APIError{
+			Type:        "PasswordNotValid",
+			Msg:         "Password has not enough length (<10 ch)",
+			ErrorNumber: 400,
+		})
+	}
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(payload.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return response.SendError(c, 500, response.APIError{
+			Type:        "HasPasswordError",
+			Msg:         "Error while password hashing",
+			ErrorNumber: 500,
+		})
+	}
+
 	insertedUser, err := user.Add(&data.User{
-		Username: payload.Username,
+		Name:     payload.Name,
+		Email:    payload.Email,
+		Password: string(hashedPassword),
 	})
 
 	// Je toto ok?
