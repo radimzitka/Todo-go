@@ -9,6 +9,7 @@ import (
 )
 
 func DeleteSubstepHandler(c fiber.Ctx) error {
+	userID := c.Locals("userId").(primitive.ObjectID)
 	tid, err := primitive.ObjectIDFromHex(c.Params("id"))
 	if err != nil {
 		return response.SendError(c, 400, response.APIError{
@@ -27,7 +28,7 @@ func DeleteSubstepHandler(c fiber.Ctx) error {
 		})
 	}
 
-	err = task.DeleteSubstep(&tid, &sid)
+	err = task.DeleteSubstep(&tid, &sid, &userID)
 	if err != nil {
 		if err.Error() == data.ANY_ERROR_DELETING_SUBTASK {
 			return response.SendError(c, 500, response.APIError{

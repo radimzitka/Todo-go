@@ -12,10 +12,11 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func FinishByID(id *primitive.ObjectID) error {
+func FinishByID(id *primitive.ObjectID, userID *primitive.ObjectID) error {
 	var task data.Item
 	err := db.Coll.Tasks.FindOne(context.Background(), bson.M{
-		"_id": id,
+		"_id":    id,
+		"userId": userID,
 	}).Decode(&task)
 	if err == mongo.ErrNoDocuments {
 		return errors.New(data.TASK_NOT_FOUND)

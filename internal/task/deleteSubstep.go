@@ -11,10 +11,11 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func DeleteSubstep(tid *primitive.ObjectID, sid *primitive.ObjectID) error {
+func DeleteSubstep(tid *primitive.ObjectID, sid *primitive.ObjectID, userID *primitive.ObjectID) error {
 	var task data.Item
 	err := db.Coll.Tasks.FindOne(context.Background(), bson.M{
-		"_id": tid,
+		"_id":    tid,
+		"userId": userID,
 	}).Decode(&task)
 
 	if err == mongo.ErrNoDocuments {

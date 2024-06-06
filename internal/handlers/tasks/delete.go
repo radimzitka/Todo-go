@@ -10,6 +10,7 @@ import (
 
 func DeleteHandler(c fiber.Ctx) error {
 	idStr := c.Params("id")
+	userID := c.Locals("userId").(primitive.ObjectID)
 	id, err := primitive.ObjectIDFromHex(idStr)
 	if err != nil {
 		return response.SendError(c, 400, response.APIError{
@@ -19,7 +20,7 @@ func DeleteHandler(c fiber.Ctx) error {
 		})
 	}
 
-	err = task.DeleteByID(&id)
+	err = task.Delete(&id, &userID)
 	if err != nil {
 		if err.Error() == data.TASK_NOT_FOUND {
 			return response.SendError(c, 404, response.APIError{

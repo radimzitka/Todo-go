@@ -5,10 +5,12 @@ import (
 	"github.com/radimzitka/zitodo-mongo/internal/data"
 	"github.com/radimzitka/zitodo-mongo/internal/response"
 	"github.com/radimzitka/zitodo-mongo/internal/task"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func ListHandler(c fiber.Ctx) error {
-	list, err := task.List()
+	userId := c.Locals("userId").(primitive.ObjectID)
+	list, err := task.List(&userId)
 
 	if err != nil {
 		if err.Error() == data.AnyErrorReadingDB {

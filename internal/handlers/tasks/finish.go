@@ -9,12 +9,13 @@ import (
 )
 
 func FinishHandler(c fiber.Ctx) error {
+	userID := c.Locals("userId").(primitive.ObjectID)
 	id, err := primitive.ObjectIDFromHex(c.Params("id"))
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).SendString("Invalid ID")
 	}
 
-	err = task.FinishByID(&id)
+	err = task.FinishByID(&id, &userID)
 	if err != nil {
 		if err.Error() == data.TASK_NOT_FOUND {
 			return response.SendError(c, 404, response.APIError{

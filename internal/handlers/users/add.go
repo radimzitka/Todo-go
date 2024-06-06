@@ -59,7 +59,7 @@ func AddHandler(c fiber.Ctx) error {
 	if err = payload.ValidateName(c); err != nil {
 		return response.SendError(c, 400, response.APIError{
 			Type:        "NameNotValid",
-			Msg:         "Name for task has not valid format (length < 3 ch)",
+			Msg:         "Name not valid format (length < 3 ch)",
 			ErrorNumber: 400,
 		})
 	}

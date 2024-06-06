@@ -15,13 +15,14 @@ import (
 
 const SUBTASK_FINISHED = "task already finished"
 
-func FinishSubstep(tid *primitive.ObjectID, sid *primitive.ObjectID) (*data.SubStep, error) {
+func FinishSubstep(tid *primitive.ObjectID, sid *primitive.ObjectID, userID *primitive.ObjectID) (*data.SubStep, error) {
 	var task data.Item
 	opts := options.FindOneAndUpdate()
 	opts.SetReturnDocument(options.After)
 
 	err := db.Coll.Tasks.FindOne(context.Background(), bson.M{
-		"_id": tid,
+		"_id":    tid,
+		"userId": userID,
 	}).Decode(&task)
 	if err == mongo.ErrNoDocuments {
 		return nil, errors.New(data.TASK_NOT_FOUND)

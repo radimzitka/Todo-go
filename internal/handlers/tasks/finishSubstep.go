@@ -9,6 +9,7 @@ import (
 )
 
 func FinishSubstepHandler(c fiber.Ctx) error {
+	userID := c.Locals("userId").(primitive.ObjectID)
 	tid, err := primitive.ObjectIDFromHex(c.Params("id"))
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).SendString("Invalid task ID")
@@ -19,7 +20,7 @@ func FinishSubstepHandler(c fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).SendString("Invalid substep ID")
 	}
 
-	task, err := task.FinishSubstep(&tid, &sid)
+	task, err := task.FinishSubstep(&tid, &sid, &userID)
 	if err != nil {
 		if err.Error() == data.SUBTASK_FINISHED {
 			return response.SendError(c, 400, response.APIError{

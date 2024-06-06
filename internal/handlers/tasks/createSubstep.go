@@ -20,6 +20,7 @@ func (p *payloadCreateSubStep) Validate() error {
 }
 
 func CreateSubstepHandler(c fiber.Ctx) error {
+	userID := c.Locals("userId").(primitive.ObjectID)
 	idStr := c.Params("id")
 	id, err := primitive.ObjectIDFromHex(idStr)
 	if err != nil {
@@ -49,7 +50,7 @@ func CreateSubstepHandler(c fiber.Ctx) error {
 
 	updatedTask, err := task.CreateSubstep(&data.SubStep{
 		Title: payload.Title,
-	}, &id)
+	}, &id, &userID)
 	if err != nil {
 		if err.Error() == data.ANY_ERROR_INSERTING_SUBTASK {
 			return response.SendError(c, 500, response.APIError{

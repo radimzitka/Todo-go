@@ -10,9 +10,10 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func DeleteByID(id *primitive.ObjectID) error {
+func Delete(id *primitive.ObjectID, userID *primitive.ObjectID) error {
 	result, err := db.Coll.Tasks.DeleteOne(context.Background(), bson.M{
-		"_id": id,
+		"_id":    id,
+		"userId": userID,
 	})
 	if err != nil {
 		return err

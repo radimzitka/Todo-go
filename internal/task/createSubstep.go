@@ -12,7 +12,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func CreateSubstep(substep *data.SubStep, id *primitive.ObjectID) (*data.Item, error) {
+func CreateSubstep(substep *data.SubStep, id *primitive.ObjectID, userID *primitive.ObjectID) (*data.Item, error) {
 	var task data.Item
 	opts := options.FindOneAndUpdate()
 	opts.SetReturnDocument(options.After)
@@ -20,7 +20,8 @@ func CreateSubstep(substep *data.SubStep, id *primitive.ObjectID) (*data.Item, e
 	sid := primitive.NewObjectID()
 	substep.ID = &sid
 	err := db.Coll.Tasks.FindOneAndUpdate(context.Background(), bson.M{
-		"_id": id,
+		"_id":    id,
+		"userId": userID,
 	}, bson.M{
 		"$push": bson.M{
 			"substeps": substep,

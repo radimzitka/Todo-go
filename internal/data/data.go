@@ -37,6 +37,7 @@ type Item struct {
 	SubSteps     []*SubStep          `json:"substeps" bson:"substeps"`
 	Finished     bool                `json:"finished" bson:"finished"`
 	TimeFinished *time.Time          `json:"timeFinished" bson:"timeFinished"`
+	UserID       *primitive.ObjectID `json:"userId" bson:"userId"`
 }
 
 type User struct {

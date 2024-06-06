@@ -7,7 +7,7 @@ import (
 	"github.com/radimzitka/zitodo-mongo/internal/user"
 )
 
-func ListHandler(c fiber.Ctx) error {
+func ListUserHandler(c fiber.Ctx) error {
 	list, err := user.List()
 
 	if err != nil {

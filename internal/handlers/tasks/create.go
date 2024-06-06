@@ -31,18 +31,16 @@ func (p *payloadCreateTask) ValidateTitle(c fiber.Ctx) error {
 }
 
 func CreateHandler(c fiber.Ctx) error {
+	userID := c.Locals("userId").(primitive.ObjectID)
 	var payload payloadCreateTask
 	err := c.Bind().Body(&payload)
 	if err != nil {
-		// Je toto spravne odeslani chyby?
 		return response.SendError(c, 400, response.APIError{
 			Type:        "DataCheckError",
 			Msg:         "Error occured when data was readed from Body.",
 			ErrorNumber: 400,
 		})
 	}
-
-	// Proc toto nefunguje?
 	if err = payload.ValidateTitle(c); err != nil {
 		return response.SendError(c, 400, response.APIError{
 			Type:        "TitleNotValid",
@@ -69,6 +67,7 @@ func CreateHandler(c fiber.Ctx) error {
 		SubSteps:     substeps,
 		Finished:     false,
 		TimeFinished: nil,
+		UserID:       &userID,
 	})
 
 	// Je toto ok?
