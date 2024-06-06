@@ -20,7 +20,7 @@ func Delete(id *primitive.ObjectID, userID *primitive.ObjectID) error {
 	}
 
 	if result.DeletedCount == 0 {
-		return errors.New(data.TASK_NOT_FOUND)
+		return errors.New(data.TaskNotFound)
 	}
 	return nil
 }

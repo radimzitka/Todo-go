@@ -19,7 +19,7 @@ func DeleteSubstep(tid *primitive.ObjectID, sid *primitive.ObjectID, userID *pri
 	}).Decode(&task)
 
 	if err == mongo.ErrNoDocuments {
-		return errors.New(data.TASK_NOT_FOUND)
+		return errors.New(data.TaskNotFound)
 	}
 	if err != nil {
 		return errors.New(data.AnyErrorReadingDB)
@@ -32,7 +32,7 @@ func DeleteSubstep(tid *primitive.ObjectID, sid *primitive.ObjectID, userID *pri
 		}
 	}
 	if !validSubtaskID {
-		return errors.New(data.SUBTASK_NOT_FOUND)
+		return errors.New(data.SubtaskNotFound)
 	}
 
 	_, err = db.Coll.Tasks.UpdateOne(context.Background(), bson.M{
@@ -45,7 +45,7 @@ func DeleteSubstep(tid *primitive.ObjectID, sid *primitive.ObjectID, userID *pri
 		},
 	})
 	if err != nil {
-		return errors.New(data.ANY_ERROR_DELETING_SUBTASK)
+		return errors.New(data.AnyErrorDeletingSubtask)
 	}
 
 	return nil

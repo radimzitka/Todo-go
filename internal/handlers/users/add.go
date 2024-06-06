@@ -97,7 +97,7 @@ func AddHandler(c fiber.Ctx) error {
 
 	// Je toto ok?
 	if err != nil {
-		if err.Error() == data.ANY_ERROR_INSERTING_USER {
+		if err.Error() == data.AnyErrorInsertingUser {
 			return response.SendError(c, 500, response.APIError{
 				Type:        "TaskCreateError",
 				Msg:         "Error during creating new user",

@@ -19,7 +19,7 @@ func DeleteByID(id *primitive.ObjectID) error {
 	}
 
 	if result.DeletedCount == 0 {
-		return errors.New(data.USER_NOT_FOUND)
+		return errors.New(data.UserNotFound)
 	}
 	return nil
 }

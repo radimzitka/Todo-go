@@ -8,17 +8,17 @@ import (
 
 const (
 	// opravit
-	AnyErrorReadingDB           = "error reading from database"
-	ANY_ERROR_INSERTING_TASK    = "error while inserting new task"
-	ANY_ERROR_INSERTING_SUBTASK = "error while inserting new task"
-	ANY_ERROR_DELETING_TASK     = "error while searching for the task"
-	ANY_ERROR_DELETING_SUBTASK  = "error while searching for the subtask"
-	TASK_NOT_FOUND              = "task was not found"
-	SUBTASK_NOT_FOUND           = "subtask was not found"
-	SUBTASK_FINISHED            = "subtask already finished"
-	TASK_FINISHED               = "task already finished"
-	ANY_ERROR_INSERTING_USER    = "error while inserting new user"
-	USER_NOT_FOUND              = "user not found"
+	AnyErrorReadingDB        = "error reading from database"
+	AnyErrorInsertingTask    = "error while inserting new task"
+	AnyErrorInsertingSubtask = "error while inserting new task"
+	AnyErrorDeletingTask     = "error while searching for the task"
+	AnyErrorDeletingSubtask  = "error while searching for the subtask"
+	TaskNotFound             = "task was not found"
+	SubtaskNotFound          = "subtask was not found"
+	SubtaskFinished          = "subtask already finished"
+	TaskFinished             = "task already finished"
+	AnyErrorInsertingUser    = "error while inserting new user"
+	UserNotFound             = "user not found"
 )
 
 type SubStep struct {

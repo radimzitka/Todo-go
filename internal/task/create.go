@@ -12,7 +12,7 @@ import (
 func Create(item *data.Item) (*data.Item, error) {
 	inserted, err := db.Coll.Tasks.InsertOne(context.Background(), item)
 	if err != nil {
-		return nil, errors.New(data.ANY_ERROR_INSERTING_TASK)
+		return nil, errors.New(data.AnyErrorInsertingTask)
 	}
 	iid := inserted.InsertedID.(primitive.ObjectID)
 	item.ID = &iid

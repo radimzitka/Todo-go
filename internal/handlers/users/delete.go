@@ -21,7 +21,7 @@ func DeleteHandler(c fiber.Ctx) error {
 
 	err = user.DeleteByID(&id)
 	if err != nil {
-		if err.Error() == data.USER_NOT_FOUND {
+		if err.Error() == data.UserNotFound {
 			return response.SendError(c, 404, response.APIError{
 				Type:        "User not found",
 				Msg:         "Trying to delete user with non-exist ID.",

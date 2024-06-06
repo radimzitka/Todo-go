@@ -29,10 +29,10 @@ func CreateSubstep(substep *data.SubStep, id *primitive.ObjectID, userID *primit
 	}, opts).Decode(&task)
 
 	if err == mongo.ErrNoDocuments {
-		return nil, errors.New(data.TASK_NOT_FOUND)
+		return nil, errors.New(data.TaskNotFound)
 	}
 	if err != nil {
-		return nil, errors.New(data.ANY_ERROR_INSERTING_SUBTASK)
+		return nil, errors.New(data.AnyErrorInsertingSubtask)
 	}
 
 	return &task, nil

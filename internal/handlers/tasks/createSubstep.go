@@ -52,14 +52,14 @@ func CreateSubstepHandler(c fiber.Ctx) error {
 		Title: payload.Title,
 	}, &id, &userID)
 	if err != nil {
-		if err.Error() == data.ANY_ERROR_INSERTING_SUBTASK {
+		if err.Error() == data.AnyErrorInsertingSubtask {
 			return response.SendError(c, 500, response.APIError{
 				Type:        "DatabaseAccessFailed",
 				Msg:         "Error during database access",
 				ErrorNumber: 500,
 			})
 		}
-		if err.Error() == data.TASK_NOT_FOUND {
+		if err.Error() == data.TaskNotFound {
 			return response.SendError(c, 404, response.APIError{
 				Type:        "TaskNotFound",
 				Msg:         "task not found",

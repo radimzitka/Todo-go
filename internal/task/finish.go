@@ -19,14 +19,14 @@ func FinishByID(id *primitive.ObjectID, userID *primitive.ObjectID) error {
 		"userId": userID,
 	}).Decode(&task)
 	if err == mongo.ErrNoDocuments {
-		return errors.New(data.TASK_NOT_FOUND)
+		return errors.New(data.TaskNotFound)
 	}
 	if err != nil {
 		return err
 	}
 
 	if task.Finished {
-		return errors.New(data.TASK_FINISHED)
+		return errors.New(data.TaskFinished)
 	}
 
 	_, err = db.Coll.Tasks.UpdateOne(context.Background(), bson.M{
@@ -38,7 +38,7 @@ func FinishByID(id *primitive.ObjectID, userID *primitive.ObjectID) error {
 		},
 	})
 	if err != nil {
-		return errors.New(data.ANY_ERROR_DELETING_TASK)
+		return errors.New(data.AnyErrorDeletingTask)
 	}
 
 	return nil

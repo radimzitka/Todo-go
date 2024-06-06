@@ -22,28 +22,28 @@ func FinishSubstepHandler(c fiber.Ctx) error {
 
 	task, err := task.FinishSubstep(&tid, &sid, &userID)
 	if err != nil {
-		if err.Error() == data.SUBTASK_FINISHED {
+		if err.Error() == data.SubtaskFinished {
 			return response.SendError(c, 400, response.APIError{
 				Type:        "SubtaskDone",
 				Msg:         "Subtask is already done",
 				ErrorNumber: 400,
 			})
 		}
-		if err.Error() == data.TASK_NOT_FOUND {
+		if err.Error() == data.TaskNotFound {
 			return response.SendError(c, 404, response.APIError{
 				Type:        "TaskNotFound",
 				Msg:         "",
 				ErrorNumber: 404,
 			})
 		}
-		if err.Error() == data.SUBTASK_NOT_FOUND {
+		if err.Error() == data.SubtaskNotFound {
 			return response.SendError(c, 404, response.APIError{
 				Type:        "SubtaskNotFound",
 				Msg:         "",
 				ErrorNumber: 404,
 			})
 		}
-		if err.Error() == data.ANY_ERROR_DELETING_TASK || err.Error() == data.ANY_ERROR_DELETING_SUBTASK {
+		if err.Error() == data.AnyErrorDeletingTask || err.Error() == data.AnyErrorDeletingSubtask {
 			return response.SendError(c, 500, response.APIError{
 				Type:        "DatabaseAccessFailed",
 				Msg:         "Access to MDB failed",

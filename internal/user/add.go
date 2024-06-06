@@ -12,7 +12,7 @@ import (
 func Add(user *data.User) (*data.User, error) {
 	inserted, err := db.Coll.Users.InsertOne(context.Background(), user)
 	if err != nil {
-		return nil, errors.New(data.ANY_ERROR_INSERTING_USER)
+		return nil, errors.New(data.AnyErrorInsertingUser)
 	}
 	iid := inserted.InsertedID.(primitive.ObjectID)
 	user.ID = &iid

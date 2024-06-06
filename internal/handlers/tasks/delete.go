@@ -22,7 +22,7 @@ func DeleteHandler(c fiber.Ctx) error {
 
 	err = task.Delete(&id, &userID)
 	if err != nil {
-		if err.Error() == data.TASK_NOT_FOUND {
+		if err.Error() == data.TaskNotFound {
 			return response.SendError(c, 404, response.APIError{
 				Type:        "NonExistTask",
 				Msg:         "Trying to delete non-exist task.",

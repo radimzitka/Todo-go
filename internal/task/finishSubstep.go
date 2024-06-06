@@ -13,7 +13,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-const SUBTASK_FINISHED = "task already finished"
+const SubtaskFinished = "task already finished"
 
 func FinishSubstep(tid *primitive.ObjectID, sid *primitive.ObjectID, userID *primitive.ObjectID) (*data.SubStep, error) {
 	var task data.Item
@@ -25,17 +25,17 @@ func FinishSubstep(tid *primitive.ObjectID, sid *primitive.ObjectID, userID *pri
 		"userId": userID,
 	}).Decode(&task)
 	if err == mongo.ErrNoDocuments {
-		return nil, errors.New(data.TASK_NOT_FOUND)
+		return nil, errors.New(data.TaskNotFound)
 	}
 	if err != nil {
-		return nil, errors.New(data.ANY_ERROR_DELETING_TASK)
+		return nil, errors.New(data.AnyErrorDeletingTask)
 	}
 
 	// Is substep already done?
 	for _, substep := range task.SubSteps {
 		if *substep.ID == *sid {
 			if substep.Done {
-				return nil, errors.New(data.SUBTASK_FINISHED)
+				return nil, errors.New(data.SubtaskFinished)
 			}
 		}
 	}
@@ -50,10 +50,10 @@ func FinishSubstep(tid *primitive.ObjectID, sid *primitive.ObjectID, userID *pri
 		},
 	}, opts).Decode(&task)
 	if err == mongo.ErrNoDocuments {
-		return nil, errors.New(data.SUBTASK_NOT_FOUND)
+		return nil, errors.New(data.SubtaskNotFound)
 	}
 	if err != nil {
-		return nil, errors.New(data.ANY_ERROR_DELETING_SUBTASK)
+		return nil, errors.New(data.AnyErrorDeletingSubtask)
 	}
 
 	for _, substep := range task.SubSteps {

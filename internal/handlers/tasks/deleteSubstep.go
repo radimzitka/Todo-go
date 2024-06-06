@@ -30,14 +30,14 @@ func DeleteSubstepHandler(c fiber.Ctx) error {
 
 	err = task.DeleteSubstep(&tid, &sid, &userID)
 	if err != nil {
-		if err.Error() == data.ANY_ERROR_DELETING_SUBTASK {
+		if err.Error() == data.AnyErrorDeletingSubtask {
 			return response.SendError(c, 500, response.APIError{
 				Type:        "DatabaseAccessFailed",
 				Msg:         "Access to MDB failed",
 				ErrorNumber: 500,
 			})
 		}
-		if err.Error() == data.TASK_NOT_FOUND {
+		if err.Error() == data.TaskNotFound {
 			return response.SendError(c, 404, response.APIError{
 				Type:        "TaskNotFound",
 				Msg:         "Task was not found",
@@ -45,7 +45,7 @@ func DeleteSubstepHandler(c fiber.Ctx) error {
 			})
 		}
 
-		if err.Error() == data.SUBTASK_NOT_FOUND {
+		if err.Error() == data.SubtaskNotFound {
 			return response.SendError(c, 404, response.APIError{
 				Type:        "SubtaskNotFound",
 				Msg:         "Subtask was not found",
